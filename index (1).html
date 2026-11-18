@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>Aditya Sarode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column. Hero with a drifting network canvas, a 4-stage workflow explorer, then project cards that each carry their own step-by-step animated flow player. */
+:root {
+  --bg: #F0F3F7;
+  --surface: #FFFFFF;
+  --ink: #0E1B2A;
+  --muted: #53647A;
+  --line: #D3DCE6;
+  --accent: #2D5BFF;
+  --accent-ink: #FFFFFF;
+  --signal: #B87503;
+  --good: #1B8F61;
+  --c1: #2D5BFF;
+  --c2: #0B7F7A;
+  --c3: #B4417E;
+  --c4: #9A6200;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A121B; --surface: #111C28; --ink: #E7EEF6; --muted: #92A3B7; --line: #223244;
+    --accent: #7391FF; --accent-ink: #0A121B; --signal: #F2B84B; --good: #4CC795;
+    --c1: #7391FF; --c2: #3FCFC8; --c3: #E87BB0; --c4: #F2B84B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A121B; --surface: #111C28; --ink: #E7EEF6; --muted: #92A3B7; --line: #223244;
+  --accent: #7391FF; --accent-ink: #0A121B; --signal: #F2B84B; --good: #4CC795;
+  --c1: #7391FF; --c2: #3FCFC8; --c3: #E87BB0; --c4: #F2B84B;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* top bar */
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.brand span { font-family: var(--font-mono); font-weight: 400; font-size: 12px; color: var(--muted); margin-left: 8px; }
+.nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 14px; }
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a:hover { color: var(--ink); }
+
+/* hero */
+.hero-wrap { position: relative; }
+.net { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .6; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent 12%, #000 72%); mask-image: linear-gradient(90deg, transparent 12%, #000 72%); }
+.hero { position: relative; z-index: 1; padding-block: 56px 48px; max-width: 780px; }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px; }
+.hero h1 { font-size: clamp(34px, 6.4vw, 58px); font-weight: 700; letter-spacing: -.02em; }
+.now { margin-top: 18px; font-family: var(--font-mono); font-size: 16px; color: var(--muted); min-height: 26px; }
+.now b { color: var(--ink); font-weight: 500; }
+.caret { display: inline-block; width: 8px; height: 18px; margin-left: 3px; vertical-align: -3px; background: var(--accent); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero p.lead { margin-top: 14px; font-size: 18px; color: var(--muted); max-width: 62ch; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn { display: inline-block; font: 500 15px var(--font-body); padding: 11px 20px; border-radius: 8px; text-decoration: none; border: 1px solid var(--accent); cursor: pointer; transition: transform .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: var(--surface); color: var(--accent); }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 32px 0 0; padding: 0; font-family: var(--font-mono); font-size: 13px; }
+.facts div { display: flex; gap: 8px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+
+/* sections */
+section { padding-top: 56px; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; margin-bottom: 24px; }
+.sec-head h2 { font-size: clamp(26px, 4vw, 34px); font-weight: 700; letter-spacing: -.01em; }
+.sec-head p { color: var(--muted); max-width: 58ch; margin-top: 8px; }
+
+/* shared controls and chips */
+.ctrl { font: 500 13px var(--font-mono); background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.ctrl:hover { color: var(--ink); border-color: var(--muted); }
+.ctrl.sm { font-size: 12px; padding: 3px 11px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+.chips li { font-family: var(--font-mono); font-size: 12px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); }
+.cap { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+/* workflow explorer */
+.track { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 28px; align-items: center; }
+.track .line, .track .fill { position: absolute; left: 12.5%; height: 3px; border-radius: 2px; top: 12.5px; }
+.track .line { width: 75%; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px); }
+.track .fill { background: var(--accent); width: 0; transition: width .7s ease; }
+.track .stop { position: relative; z-index: 1; justify-self: center; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); transition: background .3s, border-color .3s; }
+.track .stop.done { background: var(--accent); border-color: var(--accent); }
+.track .stop.now { background: var(--accent); border-color: var(--accent); animation: pulse 1.6s ease-out infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); } 100% { box-shadow: 0 0 0 11px transparent; } }
+.packet { position: absolute; top: 7px; width: 14px; height: 14px; margin-left: -7px; border-radius: 3px; background: var(--signal); z-index: 2; transition: left .7s ease; }
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+.step { text-align: left; font: inherit; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer; min-width: 0; transition: border-color .2s, transform .2s; }
+.step .n { display: block; font-family: var(--font-mono); font-size: 11px; }
+.step .t { display: block; font-weight: 600; font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
+.step[aria-current="step"] { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
+.step:hover { border-color: var(--muted); transform: translateY(-2px); }
+.panel { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 28px; }
+.panel h3 { font-size: 26px; font-weight: 700; }
+.panel .desc { margin-top: 10px; color: var(--muted); }
+.panel .label { margin-top: 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.out { margin-top: 8px; font-family: var(--font-mono); font-size: 13px; overflow-wrap: anywhere; }
+.viz { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-height: 270px; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+
+/* explorer visuals */
+.src { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: center; font-family: var(--font-mono); font-size: 12px; }
+.lane { position: relative; height: 20px; border-bottom: 1px dashed var(--line); }
+.blk { position: absolute; top: 3px; width: 14px; height: 12px; border-radius: 3px; background: var(--accent); animation: flow 2.6s linear infinite; animation-delay: var(--d, 0s); }
+.blk.alt { background: var(--signal); }
+@keyframes flow { from { left: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } to { left: calc(100% - 14px); opacity: 0; } }
+.count { font-family: var(--font-display); font-size: 40px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.rr { display: grid; grid-template-columns: 96px minmax(0, 1fr) 38px; gap: 6px 10px; align-items: center; font-family: var(--font-mono); font-size: 12px; }
+.rr .tr { height: 12px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.rr .bf { display: block; height: 100%; background: var(--accent); border-radius: 3px; transform-origin: left; animation: growx .7s ease both; animation-delay: var(--d); }
+.rr .v { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+@keyframes growx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.pen { font-family: var(--font-mono); font-size: 12px; color: var(--signal); }
+.gate { display: grid; grid-template-columns: .95fr 1.15fr .9fr; gap: 10px; font-family: var(--font-mono); font-size: 12px; align-items: start; }
+.gate .h { color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-size: 11px; }
+.gate .ev { overflow-wrap: anywhere; }
+.gate .no { color: var(--signal); overflow-wrap: anywhere; }
+.gate .ok { color: var(--good); animation: fixin .5s ease both; animation-delay: var(--d); overflow-wrap: anywhere; }
+.gate .ok.warn { color: var(--signal); }
+@keyframes fixin { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.ticks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 14px; line-height: 1.4; animation: fixin .5s ease both; animation-delay: var(--d); }
+.ticks small { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+.tick { position: relative; width: 20px; height: 20px; border-radius: 50%; background: var(--good); margin-top: 1px; }
+.tick::after { content: ""; position: absolute; left: 7px; top: 3px; width: 5px; height: 10px; border: solid var(--bg); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* projects */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 18px; }
+.card { --fc: var(--c1); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; transition: transform .25s, border-color .25s, box-shadow .25s; }
+.card:hover { transform: translateY(-4px); border-color: var(--fc); box-shadow: 0 14px 30px -18px color-mix(in srgb, var(--fc) 70%, transparent); }
+.pk { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--fc); }
+.pk i { width: 8px; height: 8px; border-radius: 50%; background: var(--fc); animation: pulse2 2s ease-out infinite; }
+@keyframes pulse2 { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--fc) 50%, transparent); } 100% { box-shadow: 0 0 0 8px transparent; } }
+.card h3 { font-size: 22px; font-weight: 700; }
+.card .prob { color: var(--muted); font-size: 15px; }
+.points { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 15px; }
+.card .res { font-family: var(--font-mono); font-size: 13px; padding: 10px 12px; background: var(--bg); border-radius: 8px; border: 1px solid var(--line); line-height: 1.55; }
+.card .res b { color: var(--good); font-weight: 500; }
+.card .more { margin-top: auto; font-size: 14px; font-weight: 500; }
+
+/* per-project flow player */
+.flow { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 14px 16px; display: grid; gap: 12px; min-width: 0; }
+.fl-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fl-k { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.fl-track { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+.fl-line, .fl-fill { position: absolute; top: 13px; height: 3px; border-radius: 2px; left: calc(50% / var(--n)); }
+.fl-line { width: calc(100% - 100% / var(--n)); background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px); }
+.fl-fill { width: 0; background: var(--fc); transition: width .6s ease; }
+.fl-packet { position: absolute; top: 7px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--surface); border: 3px solid var(--fc); box-shadow: 0 0 0 4px color-mix(in srgb, var(--fc) 25%, transparent); z-index: 2; transition: left .6s ease; pointer-events: none; }
+.fl-node { position: relative; z-index: 1; display: grid; justify-items: center; gap: 6px; background: none; border: 0; padding: 0; font: inherit; color: var(--muted); cursor: pointer; min-width: 0; }
+.fl-dot { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 500 12px var(--font-mono); background: var(--bg); border: 2px solid var(--line); color: var(--muted); transition: background .3s, border-color .3s, color .3s; }
+.fl-l { font-size: 11px; line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
+.fl-node.done .fl-dot { border-color: var(--fc); color: var(--fc); background: color-mix(in srgb, var(--fc) 14%, var(--bg)); }
+.fl-node.done .fl-l { color: var(--ink); }
+.fl-node.now .fl-dot { background: var(--fc); border-color: var(--fc); color: var(--accent-ink); animation: pulse3 1.6s ease-out infinite; }
+.fl-node.now .fl-l { color: var(--ink); font-weight: 600; }
+.fl-node:hover .fl-dot { border-color: var(--fc); }
+@keyframes pulse3 { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--fc) 45%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+.fl-cap { display: grid; }
+.fl-s { grid-area: 1 / 1; display: grid; gap: 8px; align-content: start; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .35s, transform .35s, visibility .35s; }
+.fl-s.on { opacity: 1; visibility: visible; transform: none; }
+.fl-s p { font-size: 14px; line-height: 1.5; }
+.fl-s code { font-family: var(--font-mono); font-size: 12px; padding: 6px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); color: var(--fc); overflow-wrap: anywhere; }
+.fl-n { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+.research { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; padding: 18px 24px; border: 1px dashed var(--line); border-radius: 12px; }
+.research h3 { font-size: 18px; }
+.research p { color: var(--muted); font-size: 15px; flex: 1 1 320px; }
+.research .yr { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+/* experience */
+.two { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 32px 48px; }
+.role h3 { font-size: 22px; font-weight: 700; }
+.role .meta { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin: 4px 0 14px; }
+.edu h3 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.edu p { color: var(--muted); font-size: 15px; }
+.edu .gap { margin-top: 20px; }
+.k { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 24px 32px; }
+.skills h3 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.skills ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.skills li { padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+
+/* contact */
+.contact { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 28px; display: flex; flex-wrap: wrap; gap: 20px 40px; align-items: center; justify-content: space-between; }
+.contact h2 { font-size: clamp(24px, 4vw, 32px); font-weight: 700; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+.mail code { font-family: var(--font-mono); font-size: 15px; overflow-wrap: anywhere; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; }
+footer { margin-top: 32px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+@media (max-width: 760px) {
+  .panel { grid-template-columns: minmax(0, 1fr); padding: 18px; gap: 20px; }
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-block: 40px 32px; }
+  .net { opacity: .35; -webkit-mask-image: none; mask-image: none; }
+  .step { padding: 8px; }
+  .step .t { font-size: 13px; }
+  .card { padding: 20px; }
+  .fl-l { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+  .card:hover, .btn:hover, .step:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Swap the GitHub, LinkedIn and per-project "code" links below for your real URLs. -->
+<div class="wrap">
+  <header class="bar">
+    <div class="brand">Aditya Sarode<span>AI Engineer</span></div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#workflow">Workflow</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero-wrap">
+      <canvas class="net" id="net" aria-hidden="true"></canvas>
+      <div class="hero">
+        <p class="eyebrow">AI Engineer · IOWEB3 Technologies</p>
+        <h1>I build AI systems that answer from evidence, not guesses.</h1>
+        <p class="now"><span>I build </span><b id="rot">RAG chatbots</b><i class="caret"></i></p>
+        <p class="lead">I work on LLM applications, retrieval systems and computer vision with Python and FastAPI. Below is the four-stage workflow behind my projects, then each project with its own step-by-step animation.</p>
+        <div class="cta">
+          <a class="btn primary" href="#workflow">See how I work</a>
+          <a class="btn ghost" href="#projects">View projects</a>
+        </div>
+        <dl class="facts">
+          <div><dt>Role</dt><dd>AI Engineer since July 2025</dd></div>
+          <div><dt>Degree</dt><dd>B.E. AI &amp; Data Science, 2025</dd></div>
+          <div><dt>Based in</dt><dd>Pune, India</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <section id="workflow" aria-labelledby="wf-h">
+      <div class="sec-head">
+        <div>
+          <h2 id="wf-h">How my AI systems work</h2>
+          <p>Four stages I use across my LLM projects. Select a stage to see an example from my own work.</p>
+        </div>
+        <button class="ctrl" id="toggle" type="button" aria-pressed="true">Pause</button>
+      </div>
+
+      <div class="track" id="track" aria-hidden="true">
+        <div class="line"></div><div class="fill" id="fill"></div>
+        <div class="stop"></div><div class="stop"></div><div class="stop"></div><div class="stop"></div>
+        <div class="packet" id="packet"></div>
+      </div>
+      <div class="steps" id="steps" role="group" aria-label="Workflow stages"></div>
+      <div class="panel" id="panel"></div>
+    </section>
+
+    <section id="projects" aria-labelledby="pr-h">
+      <div class="sec-head">
+        <div>
+          <h2 id="pr-h">Projects</h2>
+          <p>Each card plays its own workflow. Select any step to jump to it. Numbers shown are ones I measured or counted in the project.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card" style="--fc: var(--c1)">
+          <p class="pk"><i></i>AI agent</p>
+          <h3>Universal Job Application Agent</h3>
+          <p class="prob">Every employer uses a different portal, and candidates retype the same details for 15–30 minutes each time.</p>
+          <div class="flow" data-flow="job"></div>
+          <ul class="points">
+            <li>Facts come from a structured profile. Open questions go to an LLM that must quote the resume as evidence.</li>
+            <li>It stops for a person at CAPTCHA, email codes and the final review, and never submits on its own.</li>
+          </ul>
+          <p class="res">Time per application: <b>18–25 min → 45–75 s</b><br>Autonomous completion: <b>88%+</b> across Workday, Phenom, Oracle Cloud</p>
+          <ul class="chips"><li>Python</li><li>FastAPI</li><li>Playwright</li><li>OpenAI</li><li>Claude</li><li>PyMuPDF</li></ul>
+          <a class="more" href="https://github.com/Aditya7350">View code on GitHub →</a>
+        </article>
+
+        <article class="card" style="--fc: var(--c2)">
+          <p class="pk"><i></i>LLM + computer vision</p>
+          <h3>Adaptive AI Technical Interview Platform</h3>
+          <p class="prob">Senior engineers spend hours on first-round screens, and fixed coding tests cannot show how a candidate thinks.</p>
+          <div class="flow" data-flow="interview"></div>
+          <ul class="points">
+            <li>Questions come from MongoDB Atlas Vector Search and are reranked by a weighted score.</li>
+            <li>Camera proctoring with YOLOv11n and MediaPipe. Video frames are discarded right after analysis.</li>
+          </ul>
+          <p class="res">Plan generation: <b>~25 s → 6–8 s</b><br>81 audited questions across 6 domains · <b>39</b> pytest cases</p>
+          <ul class="chips"><li>FastAPI</li><li>React</li><li>MongoDB Atlas</li><li>OpenAI</li><li>YOLOv11</li><li>MediaPipe</li></ul>
+          <a class="more" href="https://github.com/Aditya7350">View code on GitHub →</a>
+        </article>
+
+        <article class="card" style="--fc: var(--c3)">
+          <p class="pk"><i></i>RAG + governance</p>
+          <h3>Mahakhanij Multilingual Chatbot</h3>
+          <p class="prob">Portal users and staff kept asking the same questions about royalty, payments, registration and support, in three languages.</p>
+          <div class="flow" data-flow="chatbot"></div>
+          <ul class="points">
+            <li>Answers in English, Hindi and Marathi from approved FAQs and uploaded PDF, CSV, DOCX and Excel files.</li>
+            <li>SQL Server database with migrations, role-based access, rate limiting and portal login integration.</li>
+          </ul>
+          <p class="res"><b>483</b> FAQs · <b>1,229</b> translations · 22 categories<br>Tested with 314 backend, 95 RAG and 118 frontend tests</p>
+          <ul class="chips"><li>FastAPI</li><li>React 19</li><li>TypeScript</li><li>SQL Server</li><li>Alembic</li><li>Sentence Transformers</li></ul>
+          <a class="more" href="https://github.com/Aditya7350">View code on GitHub →</a>
+        </article>
+
+        <article class="card" style="--fc: var(--c4)">
+          <p class="pk"><i></i>WhatsApp + RAG</p>
+          <h3>WhatsApp Yacht Booking Assistant</h3>
+          <p class="prob">Customers want quick answers on yachts, packages and pricing, and an assistant that guesses prices or availability would mislead them.</p>
+          <div class="flow" data-flow="yacht"></div>
+          <ul class="points">
+            <li>Retrieval over yacht and package documents with ChromaDB and OpenAI embeddings.</li>
+            <li>Keyword-based handoff sends refunds, cancellations, complaints and discounts to staff.</li>
+          </ul>
+          <p class="res">Status: <b>working prototype</b><br>Accuracy and time saved have not been benchmarked yet.</p>
+          <ul class="chips"><li>Python</li><li>FastAPI</li><li>OpenAI</li><li>ChromaDB</li><li>WhatsApp Cloud API</li></ul>
+          <a class="more" href="https://github.com/Aditya7350">View code on GitHub →</a>
+        </article>
+      </div>
+
+      <div class="research">
+        <h3>Multimodal Dyslexia Detection</h3>
+        <span class="yr">2024 – 2025 · Research</span>
+        <p>An AI system that combines speech, handwriting and reading-pattern analysis to screen for dyslexia. I worked on feature engineering, data augmentation and hyperparameter tuning, and co-authored the research paper.</p>
+      </div>
+    </section>
+
+    <section id="experience" aria-labelledby="ex-h">
+      <div class="sec-head"><h2 id="ex-h">Experience and education</h2></div>
+      <div class="two">
+        <div class="role">
+          <h3>AI Engineer, IOWEB3 Technologies</h3>
+          <p class="meta">July 2025 – Present</p>
+          <ul class="points">
+            <li>Build AI applications and backend services with Python, FastAPI, machine learning models and REST APIs.</li>
+            <li>Developed a language assessment platform that uses OpenAI Whisper for speech transcription and an LLM to evaluate answers.</li>
+            <li>Built online proctoring with YOLO and MediaPipe for face detection, gaze tracking, multiple-person detection and unauthorized-device alerts.</li>
+            <li>Developed LeadEmpire, a lead-generation platform using React, FastAPI and LLMs on business and location data.</li>
+            <li>Built AI features for a Whiteboard platform: OCR for maths and chemistry, AI explanations, PDF generation and multilingual content.</li>
+          </ul>
+        </div>
+        <div class="edu">
+          <p class="k">Education</p>
+          <h3>B.E. in Artificial Intelligence &amp; Data Science</h3>
+          <p>Ajeenkya DY Patil School of Engineering, Pune</p>
+          <p>2021 – 2025 · CGPA 7.58 / 10</p>
+          <p class="k gap">Certification</p>
+          <p>Deloitte Data Analytics Job Simulation, Forage</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" aria-labelledby="sk-h">
+      <div class="sec-head"><h2 id="sk-h">Skills</h2></div>
+      <div class="skills">
+        <div><h3>Programming</h3><ul><li>Python</li><li>SQL</li><li>JavaScript</li><li>MongoDB</li></ul></div>
+        <div><h3>Generative AI</h3><ul><li>LLMs, vLLM, RAG</li><li>LangChain, OpenAI API</li><li>Google Gemini, Hugging Face</li><li>Prompt engineering, embeddings</li></ul></div>
+        <div><h3>Machine learning</h3><ul><li>Scikit-learn</li><li>TensorFlow, PyTorch</li><li>Regression, classification</li></ul></div>
+        <div><h3>Data analysis</h3><ul><li>Pandas, NumPy</li><li>Data cleaning</li><li>Exploratory analysis</li></ul></div>
+        <div><h3>Backend and databases</h3><ul><li>FastAPI, REST APIs</li><li>PostgreSQL</li><li>API integration</li></ul></div>
+        <div><h3>Tools and cloud</h3><ul><li>Git, GitHub, Postman</li><li>Azure, Google Cloud</li><li>Jupyter Notebook</li></ul></div>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="ct-h">
+      <div class="contact">
+        <div>
+          <h2 id="ct-h">Let's work on something together</h2>
+          <div class="mail">
+            <code id="email">adityasarode1215@gmail.com</code>
+            <button class="ctrl" id="copy" type="button">Copy email</button>
+          </div>
+        </div>
+        <div class="links">
+          <a href="https://github.com/Aditya7350">GitHub</a>
+          <a href="https://www.linkedin.com/">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>© 2026 Aditya Sarode · Pune, India</footer>
+</div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+  /* ---------- hero: drifting network ---------- */
+  (function () {
+    var cv = document.getElementById("net"), ctx = cv.getContext("2d");
+    var w = 0, h = 0, nodes = [], pulses = [], cA = "#2D5BFF", cS = "#B87503", raf = null, vis = true, frame = 0;
+    function size() {
+      var r = cv.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = r.width; h = r.height;
+      cv.width = Math.max(1, w * dpr); cv.height = Math.max(1, h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = w < 600 ? 22 : 48;
+      nodes = [];
+      for (var i = 0; i < n; i++) nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35 });
+      colors();
+      draw(false);
+    }
+    function colors() { cA = cssVar("--accent") || cA; cS = cssVar("--signal") || cS; }
+    function draw(move) {
+      ctx.clearRect(0, 0, w, h);
+      var i, j, a, b, d;
+      if (move) nodes.forEach(function (p) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+      });
+      ctx.lineWidth = 1; ctx.strokeStyle = cA;
+      for (i = 0; i < nodes.length; i++) for (j = i + 1; j < nodes.length; j++) {
+        a = nodes[i]; b = nodes[j]; d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < 130) { ctx.globalAlpha = (1 - d / 130) * .4; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      }
+      ctx.fillStyle = cA; ctx.globalAlpha = .8;
+      nodes.forEach(function (p) { ctx.beginPath(); ctx.arc(p.x, p.y, 2.2, 0, 6.2832); ctx.fill(); });
+      if (move) {
+        if (frame % 40 === 0 && pulses.length < 5) {
+          a = nodes[Math.floor(Math.random() * nodes.length)];
+          for (j = 0; j < nodes.length; j++) { b = nodes[j]; d = Math.hypot(a.x - b.x, a.y - b.y); if (b !== a && d < 130) { pulses.push({ a: a, b: b, t: 0 }); break; } }
+        }
+        pulses = pulses.filter(function (p) { return (p.t += .02) < 1; });
+        ctx.fillStyle = cS; ctx.globalAlpha = 1;
+        pulses.forEach(function (p) { ctx.beginPath(); ctx.arc(p.a.x + (p.b.x - p.a.x) * p.t, p.a.y + (p.b.y - p.a.y) * p.t, 3.4, 0, 6.2832); ctx.fill(); });
+      }
+      ctx.globalAlpha = 1;
+    }
+    function loop() {
+      if (!vis) { raf = null; return; }
+      frame++; if (frame % 45 === 0) colors();
+      draw(true);
+      raf = requestAnimationFrame(loop);
+    }
+    size();
+    if (window.ResizeObserver) new ResizeObserver(function () { size(); }).observe(cv);
+    if (!reduce) {
+      raf = requestAnimationFrame(loop);
+      if (window.IntersectionObserver) new IntersectionObserver(function (e) {
+        vis = e[0].isIntersecting;
+        if (vis && !raf) raf = requestAnimationFrame(loop);
+      }).observe(cv);
+    }
+  })();
+
+  /* ---------- hero: typing line ---------- */
+  (function () {
+    var el = document.getElementById("rot");
+    var words = ["RAG chatbots", "LLM agents", "voice interviewers", "vision proctoring", "multilingual assistants"];
+    if (reduce) return;
+    var wi = 0, ci = words[0].length, dir = -1, hold = 0;
+    setInterval(function () {
+      if (hold > 0) { hold--; return; }
+      ci += dir;
+      if (ci <= 0) { dir = 1; wi = (wi + 1) % words.length; ci = 0; }
+      if (ci >= words[wi].length) { ci = words[wi].length; dir = -1; hold = 24; }
+      el.textContent = words[wi].slice(0, ci);
+    }, 70);
+  })();
+
+  /* ---------- workflow explorer ---------- */
+  var stages = [
+    { n: "01", t: "Ingest", h: "Ingest messy inputs",
+      d: "Read the documents, messages and web pages a system has to work from: PDFs, spreadsheets, resumes, WhatsApp messages and live job portals.",
+      tools: ["PyMuPDF", "python-docx", "Playwright", "Webhooks"], out: "clean text chunks + structured profile", viz: vizIngest },
+    { n: "02", t: "Retrieve", h: "Find the right context",
+      d: "Embed the content, search it by meaning, then rerank the results with simple, explainable rules so the model sees the most relevant facts.",
+      tools: ["OpenAI embeddings", "Atlas Vector Search", "ChromaDB", "Sentence Transformers"], out: "top-ranked, grounded context", viz: vizRetrieve },
+    { n: "03", t: "Verify", h: "Make the model prove it",
+      d: "Plain rules handle known facts. For everything else the model must point to evidence, or the answer is flagged or declined.",
+      tools: ["Tool calling", "Pydantic", "GPT-4o", "Claude"], out: "answers with evidence, or an honest \"not sure\"", viz: vizVerify },
+    { n: "04", t: "Ship", h: "Ship with guardrails",
+      d: "Wrap it in a FastAPI service and a React interface, keep a person in the loop for risky steps, and cover the logic with tests.",
+      tools: ["FastAPI", "React", "TypeScript", "Pytest", "Vitest"], out: "working app + test suite", viz: vizShip }
+  ];
+  var cur = 0, playing = !reduce, timer = null;
+  var stepsEl = document.getElementById("steps");
+  var panelEl = document.getElementById("panel");
+  var fillEl = document.getElementById("fill");
+  var packetEl = document.getElementById("packet");
+  var stops = document.querySelectorAll(".track .stop");
+  var toggle = document.getElementById("toggle");
+
+  function vizIngest() {
+    var rows = [["PDF / DOCX", "0s", ""], ["CSV / Excel", "0.9s", "alt"], ["WhatsApp", "1.7s", ""]];
+    var h = rows.map(function (r) {
+      return '<div class="src"><span>' + r[0] + '</span><div class="lane"><i class="blk ' + r[2] + '" style="--d:' + r[1] + '"></i><i class="blk ' + r[2] + '" style="--d:calc(' + r[1] + ' + 1.3s)"></i></div></div>';
+    }).join("");
+    return h + '<div><div class="count" data-to="483">483</div><div class="cap">FAQs loaded, plus 13 documents indexed (Mahakhanij chatbot)</div></div>';
+  }
+  function vizRetrieve() {
+    var rows = [["Semantic", 0.35], ["Skill match", 0.25], ["Difficulty fit", 0.15], ["Weak topic", 0.15], ["Context", 0.10]];
+    var h = '<div class="rr">';
+    rows.forEach(function (r, i) {
+      h += '<span>' + r[0] + '</span><span class="tr"><i class="bf" style="width:' + (r[1] / 0.35 * 100).toFixed(0) + '%;--d:' + (i * 0.12).toFixed(2) + 's"></i></span><span class="v">' + r[1].toFixed(2) + '</span>';
+    });
+    h += '</div><div class="pen">Penalties: repeated subtopic −0.12 · already shown −0.15 · failed area −0.35</div>';
+    return h + '<div class="cap">Reranking score in the interview platform</div>';
+  }
+  function vizVerify() {
+    var rows = [
+      ["Uses caching", "“cached results in Redis”", "Scored", "ok", ""],
+      ["Handles sharding", "no quote found", "Not scored", "ok warn", "no"],
+      ["Needs visa?", "profile.json", "Rule, no LLM", "ok", ""]
+    ];
+    var h = '<div class="gate"><span class="h">Claim</span><span class="h">Evidence</span><span class="h">Verdict</span>';
+    rows.forEach(function (r, i) {
+      h += '<span>' + r[0] + '</span><span class="ev ' + r[4] + '">' + r[1] + '</span><span class="' + r[3] + '" style="--d:' + (0.3 + i * 0.4) + 's">' + r[2] + '</span>';
+    });
+    return h + '</div><div class="cap">Illustrative example. LLM judgments need a verbatim quote; known facts come from rules.</div>';
+  }
+  function vizShip() {
+    var rows = [
+      ["Human approves the final page", "Job application agent"],
+      ["Maker-checker approval before publishing", "Multilingual chatbot"],
+      ["Refunds and complaints go to staff", "Yacht booking assistant"],
+      ["No video stored, 1 frame per second", "Interview proctoring"]
+    ];
+    var h = '<ul class="ticks">';
+    rows.forEach(function (r, i) {
+      h += '<li style="--d:' + (0.2 + i * 0.35) + 's"><span class="tick"></span><span>' + r[0] + '<small>' + r[1] + '</small></span></li>';
+    });
+    return h + '</ul><div class="cap">Plus 39 pytest cases in the interview platform and 118 Vitest tests in the chatbot UI</div>';
+  }
+
+  stepsEl.innerHTML = stages.map(function (s, i) {
+    return '<button type="button" class="step" data-i="' + i + '"><span class="n">' + s.n + '</span><span class="t">' + s.t + '</span></button>';
+  }).join("");
+
+  function runCounters() {
+    var el = panelEl.querySelector(".count");
+    if (!el) return;
+    var to = +el.getAttribute("data-to");
+    if (reduce) { el.textContent = to.toLocaleString("en-US"); return; }
+    var t0 = null;
+    function tick(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / 1400);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString("en-US");
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function render() {
+    var s = stages[cur];
+    Array.prototype.forEach.call(stepsEl.children, function (b, i) {
+      if (i === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    });
+    Array.prototype.forEach.call(stops, function (el, i) {
+      el.className = "stop" + (i < cur ? " done" : i === cur ? " now" : "");
+    });
+    fillEl.style.width = (cur / 3 * 75) + "%";
+    packetEl.style.left = (12.5 + cur * 25) + "%";
+    panelEl.innerHTML =
+      '<div><h3>' + s.h + '</h3><p class="desc">' + s.d + '</p>' +
+      '<p class="label">Tools</p><ul class="chips">' + s.tools.map(function (t) { return '<li>' + t + '</li>'; }).join("") + '</ul>' +
+      '<p class="label">Output</p><p class="out">' + s.out + '</p></div>' +
+      '<div class="viz">' + s.viz() + '</div>';
+    runCounters();
+  }
+
+  function start() {
+    stop();
+    timer = setInterval(function () { cur = (cur + 1) % stages.length; render(); }, 5600);
+    playing = true; toggle.textContent = "Pause"; toggle.setAttribute("aria-pressed", "true");
+  }
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null; playing = false;
+    toggle.textContent = "Play"; toggle.setAttribute("aria-pressed", "false");
+  }
+
+  stepsEl.addEventListener("click", function (e) {
+    var b = e.target.closest(".step");
+    if (!b) return;
+    cur = +b.getAttribute("data-i");
+    stop();
+    render();
+  });
+  toggle.addEventListener("click", function () { if (playing) stop(); else start(); });
+
+  render();
+  if (playing) start(); else { stop(); }
+
+  /* ---------- per-project flow players ---------- */
+  var FLOWS = {
+    job: [
+      ["URL", "Paste any job posting link. No per-site setup needed.", "careers.example.com/job/…"],
+      ["Detect", "The agent works out which portal it is: Workday, Oracle Cloud, Phenom, Greenhouse, Lever or Taleo.", "portal = Workday"],
+      ["Clear", "Cookie banners, chat widgets and promo pop-ups are closed before they can block a click.", "overlays closed"],
+      ["Sign in", "It logs in or creates an account. For CAPTCHA or email codes it pauses and asks you.", "email code needed → paused for you"],
+      ["Fill", "Known facts come from a profile file. Open questions go to the LLM, which must quote your resume.", "phone ← profile.json · why us? ← LLM + quote"],
+      ["Review", "The browser stops on the summary page. You check everything and press submit.", "status: waiting for you"]
+    ],
+    interview: [
+      ["Resume", "Upload a resume and a job description.", "resume.pdf + job_description.txt"],
+      ["Plan", "Three LLM calls run in parallel to build a 16-question plan.", "projects 6 · domain 8 · situational 2"],
+      ["Ask", "Aria asks each question out loud and listens through speech recognition.", "speech-to-text ⇄ text-to-speech"],
+      ["Judge", "The judge must quote the candidate's own words as evidence before it scores a point.", "evidence ≤ 15 words per point"],
+      ["Adapt", "Strong answer: dig deeper. Partial: probe the gap. Weak: move on. The next question is retrieved and reranked.", "strong → dig deeper · weak → move on"],
+      ["Report", "The hiring manager gets a 1–5 score, a topic breakdown and an integrity log. Camera checks run alongside.", "no raw video stored"]
+    ],
+    chatbot: [
+      ["Ask", "A user asks in English, Hindi or Marathi.", "रॉयल्टी का भुगतान कैसे करें?"],
+      ["Search", "Approved FAQs and uploaded documents are searched by keywords, then reranked by meaning.", "FAQs + 13 documents"],
+      ["Check", "The system checks confidence and evidence. If the evidence is weak, it declines instead of guessing.", "evidence ok → answer · weak → abstain"],
+      ["Answer", "The reply cites its source. Feedback and unanswered questions are saved for admins.", "answer + citation · feedback saved"],
+      ["Publish", "Admins fix gaps through a maker-checker flow, and the checker signs each publication.", "draft → review → approve → publish"]
+    ],
+    yacht: [
+      ["Message", "A customer sends a WhatsApp message, maybe after clicking an ad.", "“What does the birthday package include?”"],
+      ["Verify", "The webhook checks Meta's signature, drops non-text events and skips duplicate message IDs.", "signature ✓ · text ✓ · new id ✓"],
+      ["Route", "Refund, cancellation, complaint or human requests go straight to staff. Everything else pulls matching sections from ChromaDB.", "refund / cancel / complaint → staff"],
+      ["Answer", "gpt-4o-mini replies only from that context and never claims live availability.", "answer from retrieved context only"],
+      ["Dashboard", "The reply goes out on WhatsApp and the conversation shows up on the dashboard.", "sent via WhatsApp · logged for staff"]
+    ]
+  };
+
+  function initFlow(el) {
+    var steps = FLOWS[el.getAttribute("data-flow")], n = steps.length;
+    var cur = 0, playing = !reduce, vis = false, timer = null;
+    el.style.setProperty("--n", n);
+    el.innerHTML =
+      '<div class="fl-top"><span class="fl-k">How it works</span><button class="ctrl sm" type="button">' + (playing ? "Pause" : "Play") + '</button></div>' +
+      '<div class="fl-track"><div class="fl-line"></div><div class="fl-fill"></div><div class="fl-packet"></div>' +
+      steps.map(function (s, i) { return '<button type="button" class="fl-node" data-i="' + i + '"><span class="fl-dot">' + (i + 1) + '</span><span class="fl-l">' + s[0] + '</span></button>'; }).join("") +
+      '</div><div class="fl-cap">' +
+      steps.map(function (s, i) { return '<div class="fl-s"><span class="fl-n">Step ' + (i + 1) + ' of ' + n + '</span><p>' + s[1] + '</p><code>' + s[2] + '</code></div>'; }).join("") +
+      '</div>';
+    var nodes = el.querySelectorAll(".fl-node"), caps = el.querySelectorAll(".fl-s");
+    var fill = el.querySelector(".fl-fill"), packet = el.querySelector(".fl-packet"), btn = el.querySelector(".ctrl");
+    function show() {
+      for (var i = 0; i < n; i++) {
+        nodes[i].className = "fl-node" + (i < cur ? " done" : i === cur ? " now" : "");
+        caps[i].className = "fl-s" + (i === cur ? " on" : "");
+      }
+      fill.style.width = (cur / (n - 1) * (100 - 100 / n)) + "%";
+      packet.style.left = ((cur + .5) / n * 100) + "%";
+    }
+    function tick() { cur = (cur + 1) % n; show(); }
+    function sync() {
+      if (timer) { clearInterval(timer); timer = null; }
+      if (playing && vis) timer = setInterval(tick, 3800);
+      btn.textContent = playing ? "Pause" : "Play";
+    }
+    el.querySelector(".fl-track").addEventListener("click", function (e) {
+      var b = e.target.closest(".fl-node");
+      if (!b) return;
+      cur = +b.getAttribute("data-i"); playing = false; show(); sync();
+    });
+    btn.addEventListener("click", function () { playing = !playing; sync(); });
+    show();
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (e) { vis = e[0].isIntersecting; sync(); }, { threshold: .3 }).observe(el);
+    } else { vis = true; sync(); }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".flow"), initFlow);
+
+  /* ---------- contact: copy email ---------- */
+  var copyBtn = document.getElementById("copy");
+  copyBtn.addEventListener("click", function () {
+    var el = document.getElementById("email");
+    function done() { copyBtn.textContent = "Copied"; setTimeout(function () { copyBtn.textContent = "Copy email"; }, 1800); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      copyBtn.textContent = "Press Ctrl+C";
+    }
+    try {
+      navigator.clipboard.writeText(el.textContent).then(done, fallback);
+    } catch (err) { fallback(); }
+  });
+})();
+</script>
+
+</body>
+</html>
